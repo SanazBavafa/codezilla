@@ -5,6 +5,7 @@ import { Link as RouterLink } from 'react-router-dom'
 import EnterAddress from './Components/EnterAddress.jsx'
 import { SearchInput } from './components/SearchInput'
 import LeafletMap from './Components/LeafletMap.jsx'
+import { BadgeCard } from './Components/BadgeCard.jsx'
 
 export default function Home() {
   const [opened, { toggle }] = useDisclosure()

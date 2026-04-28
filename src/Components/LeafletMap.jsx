@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
-import html2canvas from 'html2canvas'
 import { MapContainer, Marker, Popup, Circle, TileLayer } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import marker2x from 'leaflet/dist/images/marker-icon-2x.png'
 import marker from 'leaflet/dist/images/marker-icon.png'
 import shadow from 'leaflet/dist/images/marker-shadow.png'
+import { captureLeafletMapImage } from '../Utils/captureLeafletMapImage'
 
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: marker2x,
@@ -24,20 +24,16 @@ export default function LeafletMap({ coordinates, rangeKm = 5, onImageCaptured }
     let isCancelled = false
 
     const captureMapImage = async () => {
-      await new Promise((resolve) => setTimeout(resolve, 800))
-
       if (isCancelled || !mapCaptureRef.current) {
         return
       }
 
-      const canvas = await html2canvas(mapCaptureRef.current, {
-        useCORS: true,
-        allowTaint: false,
-        backgroundColor: '#ffffff',
-        scale: 2,
-      })
+      const imageUrl = await captureLeafletMapImage(mapCaptureRef.current)
 
-      const imageUrl = canvas.toDataURL('image/png')
+      if (!imageUrl) {
+        return
+      }
+
       onImageCaptured?.(imageUrl)
     }
 
