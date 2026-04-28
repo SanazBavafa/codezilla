@@ -1,17 +1,27 @@
-import { AppShell, Burger, Container, Group, NavLink, Stack, Text, Title } from '@mantine/core'
-import { useDisclosure } from '@mantine/hooks'
-import { Link as RouterLink } from 'react-router-dom'
-import { SearchInput } from './components/SearchInput'
+import {
+  AppShell,
+  Burger,
+  Container,
+  Group,
+  NavLink,
+  Stack,
+  Text,
+  Title,
+} from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { Link as RouterLink } from "react-router-dom";
+import { SearchInput } from "./Components/SearchInput";
+import { BadgeCard } from "./Components/BadgeCard";
 
 export default function Home() {
-  const [opened, { toggle }] = useDisclosure()
+  const [opened, { toggle }] = useDisclosure();
 
   return (
     <AppShell
       header={{ height: 60 }}
       navbar={{
         width: 300,
-        breakpoint: 'sm',
+        breakpoint: "sm",
         collapsed: { mobile: !opened },
       }}
       padding="md"
@@ -27,17 +37,8 @@ export default function Home() {
 
       <AppShell.Navbar>
         <Stack p="md" gap="sm">
-          <NavLink
-            label="Home"
-            to="/"
-            component={RouterLink}
-            active
-          />
-          <NavLink
-            label="About"
-            to="/about"
-            component={RouterLink}
-          />
+          <NavLink label="Home" to="/" component={RouterLink} active />
+          <NavLink label="About" to="/about" component={RouterLink} />
         </Stack>
       </AppShell.Navbar>
 
@@ -47,20 +48,22 @@ export default function Home() {
             Welcome to My App
           </Title>
           <SearchInput
-      placeholder="Skriv in din plats..."
-      onChange={(e) => console.log(e.target.value)}
-    />
+            placeholder="Skriv in din plats..."
+            onChange={(e) => console.log(e.target.value)}
+          />
+          <BadgeCard /> {}
           <Text c="dimmed" mb="xl">
             This is the home page built with Mantine AppShell component.
           </Text>
           <Stack gap="sm">
             <Text>Navigate using the sidebar or links above.</Text>
             <Text size="sm" c="gray">
-              You can customize this AppShell further with your own components and styling.
+              You can customize this AppShell further with your own components
+              and styling.
             </Text>
           </Stack>
         </Container>
       </AppShell.Main>
     </AppShell>
-  )
+  );
 }
