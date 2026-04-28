@@ -1,20 +1,16 @@
-import {
-  AppShell,
-  Burger,
-  Container,
-  Group,
-  NavLink,
-  Stack,
-  Text,
-  Title,
-} from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { Link as RouterLink } from "react-router-dom";
-import { SearchInput } from "./Components/SearchInput";
-import { BadgeCard } from "./Components/BadgeCard";
+import { AppShell, Burger, Container, Group, NavLink, NumberInput, Stack, Text, Title } from '@mantine/core'
+import { useState } from 'react'
+import { useDisclosure } from '@mantine/hooks'
+import { Link as RouterLink } from 'react-router-dom'
+import EnterAddress from './Components/EnterAddress.jsx'
+import { SearchInput } from './components/SearchInput'
+import LeafletMap from './Components/LeafletMap.jsx'
 
 export default function Home() {
-  const [opened, { toggle }] = useDisclosure();
+  const [opened, { toggle }] = useDisclosure()
+  const [coordinates, setCoordinates] = useState(null)
+  const [rangeKm, setRangeKm] = useState(5)
+  const [mapImage, setMapImage] = useState(null)
 
   return (
     <AppShell
@@ -55,6 +51,22 @@ export default function Home() {
           <Text c="dimmed" mb="xl">
             This is the home page built with Mantine AppShell component.
           </Text>
+          <EnterAddress onCoordinatesFound={setCoordinates} />
+          <NumberInput
+            label="Range (km)"
+            value={rangeKm}
+            onChange={setRangeKm}
+            min={1}
+            max={100}
+            step={1}
+            mt="md"
+          />
+          <LeafletMap coordinates={coordinates} rangeKm={rangeKm} onImageCaptured={setMapImage} />
+          {mapImage && (
+            <Text size="sm" c="gray" mt="sm">
+              Map image is ready and stored in memory for later use.
+            </Text>
+          )}
           <Stack gap="sm">
             <Text>Navigate using the sidebar or links above.</Text>
             <Text size="sm" c="gray">
@@ -62,6 +74,7 @@ export default function Home() {
               and styling.
             </Text>
           </Stack>
+          
         </Container>
       </AppShell.Main>
     </AppShell>
