@@ -1,6 +1,7 @@
 import { AppShell, Burger, Container, Group, NavLink, Stack, Text, Title } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { Link as RouterLink } from 'react-router-dom'
+import { SearchInput } from './components/SearchInput'
 
 export default function Home() {
   const [opened, { toggle }] = useDisclosure()
@@ -45,6 +46,10 @@ export default function Home() {
           <Title order={2} mb="md">
             Welcome to My App
           </Title>
+          <SearchInput
+      placeholder="Skriv in din plats..."
+      onChange={(e) => console.log(e.target.value)}
+    />
           <Text c="dimmed" mb="xl">
             This is the home page built with Mantine AppShell component.
           </Text>
