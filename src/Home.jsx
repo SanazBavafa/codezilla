@@ -10,6 +10,7 @@ export default function Home() {
   const [opened, { toggle }] = useDisclosure()
   const [coordinates, setCoordinates] = useState(null)
   const [rangeKm, setRangeKm] = useState(5)
+  const [mapImage, setMapImage] = useState(null)
 
   return (
     <AppShell
@@ -68,7 +69,12 @@ export default function Home() {
             step={1}
             mt="md"
           />
-          <LeafletMap coordinates={coordinates} rangeKm={rangeKm} />
+          <LeafletMap coordinates={coordinates} rangeKm={rangeKm} onImageCaptured={setMapImage} />
+          {mapImage && (
+            <Text size="sm" c="gray" mt="sm">
+              Map image is ready and stored in memory for later use.
+            </Text>
+          )}
           <Stack gap="sm">
             <Text>Navigate using the sidebar or links above.</Text>
             <Text size="sm" c="gray">
