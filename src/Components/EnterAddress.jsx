@@ -1,13 +1,13 @@
-import fetchCoordinatesFromAddress from '../Fetch/fetchCoordinatesFromAdress'
 import { useState } from 'react'
-import { Button, TextInput } from '@mantine/core'
+import { Button, Stack, Text, TextInput } from '@mantine/core'
+import fetchCoordinatesFromAddress from '../Fetch/fetchCoordinatesFromAdress'
 
 export default function EnterAddress({ onCoordinatesFound }) {
   const [address, setAddress] = useState('')
   const [coordinates, setCoordinates] = useState(null)
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+  const handleSubmit = async (event) => {
+    event.preventDefault()
 
     try {
       const coords = await fetchCoordinatesFromAddress(address)
@@ -18,26 +18,22 @@ export default function EnterAddress({ onCoordinatesFound }) {
     }
   }
 
-  console.log('EnterAddress rendered')
-
   return (
-    <form onSubmit={handleSubmit}>
+    <Stack gap="sm" component="form" onSubmit={handleSubmit}>
       <TextInput
         label="Address"
         value={address}
-        onChange={(e) => setAddress(e.target.value)}
+        onChange={(event) => setAddress(event.target.value)}
         placeholder="Enter address"
       />
-      <Button type="submit" mt="sm">
-        Get Coordinates
-      </Button>
+      <Button type="submit">Search</Button>
 
       {coordinates && (
-        <div>
-          <p>Latitude: {coordinates.lat}</p>
-          <p>Longitude: {coordinates.lon}</p>
-        </div>
+        <Stack gap={0}>
+          <Text size="sm">Latitude: {coordinates.lat}</Text>
+          <Text size="sm">Longitude: {coordinates.lon}</Text>
+        </Stack>
       )}
-    </form>
+    </Stack>
   )
 }
