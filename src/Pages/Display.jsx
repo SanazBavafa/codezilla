@@ -19,6 +19,9 @@ export default function Display() {
         active,
         coordinates,
         mapImage,
+        pollutionTotal,
+        pollutionData,
+        radiusKm,
         handleCoordinatesFound,
         handleMapImageCaptured,
         goToStep,
@@ -42,10 +45,19 @@ export default function Display() {
 
                 <Stepper.Step label="Display results" description="Show the result card">
                     <Stack gap="md" pt="md">
-                        <BadgeCard mapImage={mapImage} />
+                        <BadgeCard
+                            mapImage={mapImage}
+                            pollutionTotal={pollutionTotal}
+                            pollutionData={pollutionData}
+                        />
                         {mapImage && (
                             <Text size="sm" c="dimmed">
                                 Map image captured and ready for later use.
+                            </Text>
+                        )}
+                        {pollutionTotal !== null && (
+                            <Text size="sm" c="dimmed">
+                                Total pollution in the selected area: {pollutionTotal}
                             </Text>
                         )}
                         <Group justify="space-between">
@@ -97,7 +109,7 @@ export default function Display() {
                 >
                     <LeafletMap
                         coordinates={coordinates}
-                        rangeKm={5}
+                        rangeKm={radiusKm}
                         onImageCaptured={handleMapImageCaptured}
                     />
                 </Box>
