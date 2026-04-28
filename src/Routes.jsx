@@ -1,5 +1,5 @@
 import { MantineProvider } from '@mantine/core'
-import { HashRouter, Link, Route, Routes } from 'react-router-dom'
+import { HashRouter, Route, Routes } from 'react-router-dom'
 import Home from './Home'
 
 import '@mantine/core/styles.css'

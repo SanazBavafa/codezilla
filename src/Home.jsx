@@ -1,6 +1,7 @@
 import { AppShell, Burger, Container, Group, NavLink, Stack, Text, Title } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { Link as RouterLink } from 'react-router-dom'
+import EnterAddress from './Components/EnterAddress.jsx'
 import { SearchInput } from './components/SearchInput'
 
 export default function Home() {
@@ -53,12 +54,14 @@ export default function Home() {
           <Text c="dimmed" mb="xl">
             This is the home page built with Mantine AppShell component.
           </Text>
+          <EnterAddress />
           <Stack gap="sm">
             <Text>Navigate using the sidebar or links above.</Text>
             <Text size="sm" c="gray">
               You can customize this AppShell further with your own components and styling.
             </Text>
           </Stack>
+          
         </Container>
       </AppShell.Main>
     </AppShell>
