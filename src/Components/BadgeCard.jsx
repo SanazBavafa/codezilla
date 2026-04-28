@@ -1,45 +1,129 @@
 import { Badge, Card, Group, Image, Stack, Text } from '@mantine/core'
 
-export function BadgeCard({ mapImage, pollutionTotal, pollutionData = [] }) {
+function formatCompactNumber(value) {
+  return new Intl.NumberFormat('en', {
+    notation: 'compact',
+    maximumFractionDigits: 1,
+  }).format(value)
+}
+
+function ReleasePill({ active, label, color }) {
   return (
-    <Card withBorder radius="md" padding="lg">
+    <Badge variant={active ? 'filled' : 'light'} color={active ? color : 'gray'}>
+      {label}
+    </Badge>
+  )
+}
+
+function ReleaseSection({ title, summary }) {
+  if (!summary) {
+    return (
+      <Card withBorder radius="md" padding="md">
+        <Text fw={700}>{title}</Text>
+        <Text size="sm" c="dimmed" mt="xs">
+          Summary is loading.
+        </Text>
+      </Card>
+    )
+  }
+
+  return (
+    <Card withBorder radius="md" padding="md">
       <Group justify="space-between" align="flex-start">
-        <Stack gap={4}>
+        <Stack gap={2}>
           <Text fw={700} size="lg">
-            Result Title
+            {title}
           </Text>
-          <Text c="dimmed" size="sm">
-            Default result card for the selected location.
+          <Text size="sm" c="dimmed">
+            Latest year: {summary.latestYear ?? 'N/A'}
           </Text>
         </Stack>
-        <Badge variant="light">Default</Badge>
+        <Badge color={summary.intensityColor} variant="filled">
+          {summary.intensityLabel}
+        </Badge>
       </Group>
 
-      {pollutionTotal !== null && (
-        <Text fw={600} mt="md">
-          Total pollution: {pollutionTotal}
+      <Group gap="xs" mt="sm">
+        <ReleasePill active={summary.intensityLabel === 'Low'} label="Low" color="green" />
+        <ReleasePill active={summary.intensityLabel === 'Average'} label="Average" color="yellow" />
+        <ReleasePill active={summary.intensityLabel === 'High'} label="High" color="red" />
+      </Group>
+
+      <Stack gap={4} mt="md">
+        <Text size="sm">
+          Total facilities in range: {summary.totalFacilities}
+        </Text>
+        <Text size="sm">
+          Larger facilities nearby: {summary.largeFacilityCount}
+        </Text>
+        <Text size="sm" fw={600}>
+          Total releases in the latest year: {formatCompactNumber(summary.totalRelease)}
+        </Text>
+      </Stack>
+
+      {summary.totalFacilities > 0 ? (
+        <>
+          <Stack gap={4} mt="md">
+            <Text fw={600} size="sm">
+              A few examples
+            </Text>
+            {summary.facilityExamples.slice(0, 2).map((facility, index) => (
+              <Text key={`${facility.facilityName}-${index}`} size="sm">
+                {facility.facilityName} {facility.city ? `(${facility.city})` : ''} — {formatCompactNumber(facility.totalRelease)}
+              </Text>
+            ))}
+          </Stack>
+
+          <Stack gap={4} mt="md">
+            <Text fw={600} size="sm">
+              Main pollutants
+            </Text>
+            {summary.pollutantTotals.slice(0, 2).map(([pollutant, total]) => (
+              <Text key={pollutant} size="sm">
+                {pollutant}: {formatCompactNumber(total)}
+              </Text>
+            ))}
+          </Stack>
+        </>
+      ) : (
+        <Text size="sm" c="dimmed" mt="md">
+          No matching facilities were found in this area.
         </Text>
       )}
+    </Card>
+  )
+}
 
-      <Text size="sm" c="dimmed" mt="sm">
-        Facilities in range: {pollutionData.length}
-      </Text>
+export function BadgeCard({ airSummary, waterSummary, mapImage }) {
+  return (
+    <Card withBorder radius="md" padding="lg">
+      <Stack gap="md">
+        <Stack gap={4}>
+          <Text fw={700} size="lg">
+            What is nearby?
+          </Text>
+          <Text c="dimmed" size="sm">
+            A simple overview of air and water releases in the area around your address.
+          </Text>
+        </Stack>
 
-      {pollutionData.slice(0, 3).map((row, index) => (
-        <Text key={`${row.FacilityInspireId ?? row.facilityName ?? 'facility'}-${index}`} size="sm" mt={4}>
-          {row.facilityName} - {row.Pollutant} ({row.Releases})
-        </Text>
-      ))}
+        <ReleaseSection title="Air releases" summary={airSummary} />
+        <ReleaseSection title="Water releases" summary={waterSummary} />
 
-      {mapImage && (
-        <Image
-          src={mapImage}
-          alt="Captured map preview"
-          radius="md"
-          mt="md"
-          style={{ maxHeight: 240, objectFit: 'cover' }}
-        />
-      )}
+        {mapImage && (
+          <Card withBorder radius="md" padding="md">
+            <Text fw={600} size="sm" mb="xs">
+              Map image
+            </Text>
+            <Image
+              src={mapImage}
+              alt="Captured map preview"
+              radius="md"
+              style={{ maxHeight: 260, objectFit: 'cover' }}
+            />
+          </Card>
+        )}
+      </Stack>
     </Card>
   )
 }

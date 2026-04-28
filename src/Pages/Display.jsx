@@ -1,8 +1,8 @@
 import {
     Button,
-    Card,
     Box,
     Group,
+    NumberInput,
     Stack,
     Stepper,
     Text,
@@ -10,20 +10,21 @@ import {
 } from '@mantine/core'
 import LeafletMap from '../Components/LeafletMap.jsx'
 import { BadgeCard } from '../Components/BadgeCard.jsx'
+import { DetailedReport } from '../Components/DetailedReport.jsx'
 import EnterAddress from '../Components/EnterAddress.jsx'
 import { useDisplayStepper } from '../hooks/useDisplayStepper.js'
-
 
 export default function Display() {
     const {
         active,
         coordinates,
         mapImage,
-        pollutionTotal,
-        pollutionData,
+        releaseSummaries,
+        isLoadingSummaries,
         radiusKm,
         handleCoordinatesFound,
         handleMapImageCaptured,
+        setRadiusKm,
         goToStep,
     } = useDisplayStepper()
 
@@ -35,29 +36,32 @@ export default function Display() {
                 <Stepper.Step label="Enter address" description="Search for a location">
                     <Stack gap="md" pt="md">
                         <EnterAddress onCoordinatesFound={handleCoordinatesFound} />
+                        <NumberInput
+                            label="Radius (km)"
+                            value={radiusKm}
+                            onChange={setRadiusKm}
+                            min={1}
+                            max={100}
+                            step={1}
+                        />
                         <Group justify="flex-end">
                             <Button onClick={() => goToStep(1)} disabled={!coordinates}>
                                 Continue
                             </Button>
-                        </Group>                        
+                        </Group>
                     </Stack>
                 </Stepper.Step>
 
                 <Stepper.Step label="Display results" description="Show the result card">
                     <Stack gap="md" pt="md">
                         <BadgeCard
+                            airSummary={releaseSummaries.air}
+                            waterSummary={releaseSummaries.water}
                             mapImage={mapImage}
-                            pollutionTotal={pollutionTotal}
-                            pollutionData={pollutionData}
                         />
-                        {mapImage && (
+                        {isLoadingSummaries && (
                             <Text size="sm" c="dimmed">
-                                Map image captured and ready for later use.
-                            </Text>
-                        )}
-                        {pollutionTotal !== null && (
-                            <Text size="sm" c="dimmed">
-                                Total pollution in the selected area: {pollutionTotal}
+                                Loading the latest air and water summaries...
                             </Text>
                         )}
                         <Group justify="space-between">
@@ -71,14 +75,11 @@ export default function Display() {
 
                 <Stepper.Step label="Detailed report" description="Placeholder for the report">
                     <Stack gap="md" pt="md">
-                        <Card withBorder radius="md" padding="lg">
-                            <Text fw={600} mb="xs">
-                                Detailed report placeholder
-                            </Text>
-                            <Text c="dimmed">
-                                Add the detailed report content here later.
-                            </Text>
-                        </Card>
+                        <DetailedReport
+                            airSummary={releaseSummaries.air}
+                            waterSummary={releaseSummaries.water}
+                            mapImage={mapImage}
+                        />
                         <Group justify="space-between">
                             <Button variant="default" onClick={() => goToStep(1)}>
                                 Back

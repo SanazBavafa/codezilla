@@ -4,10 +4,10 @@
  *
  * @param {number} lat       - center latitude
  * @param {number} lon       - center longitude
- * @param {number} radiusKm  - distance in kilometers (default: 5)
+ * @param {number} radiusKm  - distance in kilometers (default: 20)
  * @returns {object} boundingBox with 4 corners + center
  */
-export function expandCoordinates(lat, lon, radiusKm = 5) {
+export function expandCoordinates(lat, lon, radiusKm = 500) {
   const EARTH_RADIUS_KM = 6371;
 
   // Convert km offset to degrees
