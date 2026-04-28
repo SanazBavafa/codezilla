@@ -20,6 +20,7 @@ export default function Display() {
         coordinates,
         mapImage,
         releaseSummaries,
+        scoreSummaries,
         isLoadingSummaries,
         radiusKm,
         handleCoordinatesFound,
@@ -57,6 +58,8 @@ export default function Display() {
                         <BadgeCard
                             airSummary={releaseSummaries.air}
                             waterSummary={releaseSummaries.water}
+                            airScore={scoreSummaries.air}
+                            waterScore={scoreSummaries.water}
                             mapImage={mapImage}
                         />
                         {isLoadingSummaries && (

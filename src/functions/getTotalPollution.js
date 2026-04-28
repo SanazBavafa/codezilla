@@ -1,7 +1,7 @@
 import { expandCoordinates } from './expandCoordinates'
 import { getDistanceKm } from './getDistanceKm'
 
-export function getTotalPollution(lat, lon, data, radiusKm = 5) {
+export function getTotalPollution(lat, lon, data, radiusKm = 20) {
 
   const { north, south, east, west } = expandCoordinates(lat, lon, radiusKm)
 

@@ -2,12 +2,15 @@ import { useCallback, useEffect, useState } from 'react'
 import { filterPollutionDataByCoordinates } from '../functions/filterPollutionDataByCoordinates'
 import { loadPollutionCsv } from '../functions/loadPollutionCsv'
 import { getLatestYearRows, summarizeReleaseRows } from '../functions/summarizeReleaseRows'
+import { normalizeRowsToEvents } from '../functions/emissionAdapters'
+import { scoreEmissions } from '../functions/scoreEmissions'
 
 export function useDisplayStepper() {
   const [active, setActive] = useState(0)
   const [coordinates, setCoordinates] = useState(null)
   const [mapImage, setMapImage] = useState(null)
   const [releaseSummaries, setReleaseSummaries] = useState({ air: null, water: null })
+  const [scoreSummaries, setScoreSummaries] = useState({ air: null, water: null })
   const [isLoadingSummaries, setIsLoadingSummaries] = useState(false)
   const [radiusKm, setRadiusKm] = useState(5)
 
@@ -60,9 +63,17 @@ export function useDisplayStepper() {
         )
 
         if (!isCancelled) {
-          setReleaseSummaries({
-            air: summarizeReleaseRows(filteredAirRows, { releaseType: 'AIR', latestYear: airLatestYear }),
-            water: summarizeReleaseRows(filteredWaterRows, { releaseType: 'WATER', latestYear: waterLatestYear }),
+          const airSummary = summarizeReleaseRows(filteredAirRows, { releaseType: 'AIR', latestYear: airLatestYear })
+          const waterSummary = summarizeReleaseRows(filteredWaterRows, { releaseType: 'WATER', latestYear: waterLatestYear })
+
+          setReleaseSummaries({ air: airSummary, water: waterSummary })
+
+          // Score
+          const airEvents = normalizeRowsToEvents(filteredAirRows, 'AIR')
+          const waterEvents = normalizeRowsToEvents(filteredWaterRows, 'WATER')
+          setScoreSummaries({
+            air: scoreEmissions(airEvents),
+            water: scoreEmissions(waterEvents),
           })
         }
       } catch (error) {
@@ -89,6 +100,7 @@ export function useDisplayStepper() {
     coordinates,
     mapImage,
     releaseSummaries,
+    scoreSummaries,
     isLoadingSummaries,
     radiusKm,
     handleCoordinatesFound,

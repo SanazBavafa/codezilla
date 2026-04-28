@@ -1,4 +1,4 @@
-import { Badge, Card, Group, Image, Stack, Text } from '@mantine/core'
+import { Badge, Card, Group, Image, Progress, Stack, Text } from '@mantine/core'
 
 function formatCompactNumber(value) {
   return new Intl.NumberFormat('en', {
@@ -15,7 +15,7 @@ function ReleasePill({ active, label, color }) {
   )
 }
 
-function ReleaseSection({ title, summary }) {
+function ReleaseSection({ title, summary, score }) {
   if (!summary) {
     return (
       <Card withBorder radius="md" padding="md">
@@ -42,6 +42,16 @@ function ReleaseSection({ title, summary }) {
           {summary.intensityLabel}
         </Badge>
       </Group>
+
+      {score && (
+        <Stack gap={2} mt="sm">
+          <Text fw={600} size="sm">
+            Score: {score.score} / 100
+          </Text>
+          <Progress value={score.barValue} color={score.score > 66 ? 'red' : score.score > 33 ? 'yellow' : 'green'} size="lg" radius="xl" />
+          <Text size="xs" c="dimmed">{score.label}</Text>
+        </Stack>
+      )}
 
       <Group gap="xs" mt="sm">
         <ReleasePill active={summary.intensityLabel === 'Low'} label="Low" color="green" />
@@ -94,7 +104,7 @@ function ReleaseSection({ title, summary }) {
   )
 }
 
-export function BadgeCard({ airSummary, waterSummary, mapImage }) {
+export function BadgeCard({ airSummary, waterSummary, airScore, waterScore, mapImage }) {
   return (
     <Card withBorder radius="md" padding="lg">
       <Stack gap="md">
@@ -107,8 +117,8 @@ export function BadgeCard({ airSummary, waterSummary, mapImage }) {
           </Text>
         </Stack>
 
-        <ReleaseSection title="Air releases" summary={airSummary} />
-        <ReleaseSection title="Water releases" summary={waterSummary} />
+        <ReleaseSection title="Air releases" summary={airSummary} score={airScore} />
+        <ReleaseSection title="Water releases" summary={waterSummary} score={waterScore} />
 
         {mapImage && (
           <Card withBorder radius="md" padding="md">
