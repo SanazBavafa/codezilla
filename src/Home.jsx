@@ -17,7 +17,7 @@ export default function Home() {
       header={{ height: 60 }}
       navbar={{
         width: 300,
-        breakpoint: 'sm',
+        breakpoint: "sm",
         collapsed: { mobile: !opened },
       }}
       padding="md"
@@ -58,9 +58,10 @@ export default function Home() {
             Welcome to My App
           </Title>
           <SearchInput
-      placeholder="Skriv in din plats..."
-      onChange={(e) => console.log(e.target.value)}
-    />
+            placeholder="Skriv in din plats..."
+            onChange={(e) => console.log(e.target.value)}
+          />
+          <BadgeCard /> {}
           <Text c="dimmed" mb="xl">
             This is the home page built with Mantine AppShell component.
           </Text>
@@ -83,12 +84,13 @@ export default function Home() {
           <Stack gap="sm">
             <Text>Navigate using the sidebar or links above.</Text>
             <Text size="sm" c="gray">
-              You can customize this AppShell further with your own components and styling.
+              You can customize this AppShell further with your own components
+              and styling.
             </Text>
           </Stack>
           
         </Container>
       </AppShell.Main>
     </AppShell>
-  )
+  );
 }
