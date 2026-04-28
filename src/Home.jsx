@@ -44,6 +44,11 @@ export default function Home() {
             to="/about"
             component={RouterLink}
           />
+          <NavLink
+            label="Display"
+            to="/display"
+            component={RouterLink}
+          />
         </Stack>
       </AppShell.Navbar>
 
