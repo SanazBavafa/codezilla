@@ -1,6 +1,7 @@
 import { MantineProvider } from '@mantine/core'
-import { HashRouter, Link, Route, Routes } from 'react-router-dom'
+import { HashRouter, Route, Routes } from 'react-router-dom'
 import Home from './Home'
+import Display from './Pages/Display'
 
 import '@mantine/core/styles.css'
 
@@ -28,6 +29,7 @@ export default function AppRoutes() {
       <HashRouter>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/display" element={<Display />} />
           <Route path="/about" element={<About />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
