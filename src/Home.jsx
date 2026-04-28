@@ -1,11 +1,15 @@
-import { AppShell, Burger, Container, Group, NavLink, Stack, Text, Title } from '@mantine/core'
+import { AppShell, Burger, Container, Group, NavLink, NumberInput, Stack, Text, Title } from '@mantine/core'
+import { useState } from 'react'
 import { useDisclosure } from '@mantine/hooks'
 import { Link as RouterLink } from 'react-router-dom'
 import EnterAddress from './Components/EnterAddress.jsx'
 import { SearchInput } from './components/SearchInput'
+import LeafletMap from './Components/LeafletMap.jsx'
 
 export default function Home() {
   const [opened, { toggle }] = useDisclosure()
+  const [coordinates, setCoordinates] = useState(null)
+  const [rangeKm, setRangeKm] = useState(5)
 
   return (
     <AppShell
@@ -54,7 +58,17 @@ export default function Home() {
           <Text c="dimmed" mb="xl">
             This is the home page built with Mantine AppShell component.
           </Text>
-          <EnterAddress />
+          <EnterAddress onCoordinatesFound={setCoordinates} />
+          <NumberInput
+            label="Range (km)"
+            value={rangeKm}
+            onChange={setRangeKm}
+            min={1}
+            max={100}
+            step={1}
+            mt="md"
+          />
+          <LeafletMap coordinates={coordinates} rangeKm={rangeKm} />
           <Stack gap="sm">
             <Text>Navigate using the sidebar or links above.</Text>
             <Text size="sm" c="gray">
