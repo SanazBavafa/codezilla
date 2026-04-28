@@ -33,8 +33,22 @@ export default function Home() {
 
       <AppShell.Navbar>
         <Stack p="md" gap="sm">
-          <NavLink label="Home" to="/" component={RouterLink} active />
-          <NavLink label="About" to="/about" component={RouterLink} />
+          <NavLink
+            label="Home"
+            to="/"
+            component={RouterLink}
+            active
+          />
+          <NavLink
+            label="About"
+            to="/about"
+            component={RouterLink}
+          />
+          <NavLink
+            label="Display"
+            to="/display"
+            component={RouterLink}
+          />
         </Stack>
       </AppShell.Navbar>
 
