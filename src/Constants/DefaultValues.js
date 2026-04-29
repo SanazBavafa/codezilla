@@ -1,1 +1,5 @@
 const DEFAULT_RANGE_KM = 20;
+
+const EARTH_RADIUS_KM = 6371;
+
+export { DEFAULT_RANGE_KM, EARTH_RADIUS_KM };   

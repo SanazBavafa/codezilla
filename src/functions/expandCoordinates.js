@@ -1,3 +1,5 @@
+import { DEFAULT_RANGE_KM } from '../Constants/DefaultValues.js'
+import { EARTH_RADIUS_KM } from '../Constants/DefaultValues.js'
 /**
  * Expands a coordinate point by a given distance in all 4 directions.
  * Returns a bounding box (NW, NE, SW, SE corners) + center.
@@ -7,8 +9,7 @@
  * @param {number} radiusKm  - distance in kilometers (default: 20)
  * @returns {object} boundingBox with 4 corners + center
  */
-export function expandCoordinates(lat, lon, radiusKm = 500) {
-  const EARTH_RADIUS_KM = 6371;
+export function expandCoordinates(lat, lon, radiusKm = DEFAULT_RANGE_KM) {
 
   // Convert km offset to degrees
   const deltaLat = (radiusKm / EARTH_RADIUS_KM) * (180 / Math.PI);
