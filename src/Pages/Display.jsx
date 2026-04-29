@@ -193,209 +193,89 @@ function EmailGate({ email, setEmail, emailSubmitted, handleEmail }) {
 }
 
 export default function Display() {
-  const {
-    active,
-    coordinates,
-    mapImage,
-    mapFacilities,
-    releaseSummaries,
-    isLoadingSummaries,
-    radiusKm,
-    handleCoordinatesFound,
-    handleMapImageCaptured,
-    setRadiusKm,
-    goToStep,
-  } = useDisplayStepper()
+    const {
+        active,
+        coordinates,
+        mapImage,
+        releaseSummaries,
+        scoreSummaries,
+        isLoadingSummaries,
+        radiusKm,
+        handleCoordinatesFound,
+        handleMapImageCaptured,
+        setRadiusKm,
+        goToStep,
+    } = useDisplayStepper()
 
-  const [email, setEmail] = useState('')
-  const [emailSubmitted, setEmailSubmitted] = useState(false)
+    return (
+        <Stack gap="xl" p="lg">
+            <Title order={2}>Search flow</Title>
 
-  const handleEmail = () => {
-    if (!email.includes('@')) {
-      return
-    }
+            <Stepper active={active} onStepClick={goToStep} allowNextStepsSelect={false}>
+                <Stepper.Step label="Enter address" description="Search for a location">
+                    <Stack gap="md" pt="md">
+                        <EnterAddress onCoordinatesFound={handleCoordinatesFound} />
+                        <NumberInput
+                            label="Radius (km)"
+                            value={radiusKm}
+                            onChange={setRadiusKm}
+                            min={1}
+                            max={100}
+                            step={1}
+                        />
+                        <Group justify="flex-end">
+                            <Button onClick={() => goToStep(1)} disabled={!coordinates}>
+                                Continue
+                            </Button>
+                        </Group>
+                    </Stack>
+                </Stepper.Step>
 
-    localStorage.setItem('greendum_email', email)
-    setEmailSubmitted(true)
-  }
+                <Stepper.Step label="Display results" description="Show the result card">
+                    <Stack gap="md" pt="md">
+                        <BadgeCard
+                            airSummary={releaseSummaries.air}
+                            waterSummary={releaseSummaries.water}
+                            airScore={scoreSummaries.air}
+                            waterScore={scoreSummaries.water}
+                            mapImage={mapImage}
+                        />
+                        {isLoadingSummaries && (
+                            <Text size="sm" c="dimmed">
+                                Loading the latest air and water summaries...
+                            </Text>
+                        )}
+                        <Group justify="space-between">
+                            <Button variant="default" onClick={() => goToStep(0)}>
+                                Back
+                            </Button>
+                            <Button onClick={() => goToStep(2)}>Continue</Button>
+                        </Group>
+                    </Stack>
+                </Stepper.Step>
 
-  const liUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`
-  const liText = '"Checked emissions near of our location with GreenHouse — sustainability due diligence in seconds. Built for the Icons Of hackathon 🌿 #ESG #Sustainability"'
+                <Stepper.Step label="Detailed report" description="Placeholder for the report">
+                    <Stack gap="md" pt="md">
+                        <DetailedReport
+                            airSummary={releaseSummaries.air}
+                            waterSummary={releaseSummaries.water}
+                            mapImage={mapImage}
+                        />
+                        <Group justify="space-between">
+                            <Button variant="default" onClick={() => goToStep(1)}>
+                                Back
+                            </Button>
+                            <Button variant="light" onClick={() => goToStep(0)}>
+                                Start over
+                            </Button>
+                        </Group>
+                    </Stack>
+                </Stepper.Step>
 
-  return (
-    <Box maw={640} mx="auto" pt="sm" pb="xl" px="md" style={{ color: C.fg }}>
-      <Stack gap="lg">
-        <Hero />
-
-        {active === 0 && (
-        <SectionFrame active={active === 0}>
-          <Stack gap="md" align="center">
-            <StepNav active={active} goToStep={goToStep} />
-            <Stack gap={2} align="center" ta="center" w="100%">
-              <Text fw={700} tt="uppercase" fz="xs" c="dimmed" style={{ letterSpacing: '0.08em' }}>
-                Step 1
-              </Text>
-              <Title order={3}>Enter address</Title>
-              <Text size="sm" c="dimmed" maw={420}>
-                Search for a location and set the radius.
-              </Text>
-            </Stack>
-
-            <EnterAddress onCoordinatesFound={handleCoordinatesFound} />
-            <Box w="100%" maw={220}>
-              <NumberInput
-                label="Radius (km)"
-                value={radiusKm}
-                onChange={setRadiusKm}
-                min={1}
-                max={100}
-                step={1}
-                w="100%"
-              />
-            </Box>
-          </Stack>
-        </SectionFrame>
-        )}
-
-        {active === 1 && (
-        <SectionFrame active={active === 1}>
-          <Stack gap="md">
-            <StepNav active={active} goToStep={goToStep} />
-            
-            
-
-            {releaseSummaries.air && (
-              <Group grow align="stretch">
-                {[
-                  {
-                    label: 'Air quality',
-                    val: releaseSummaries.airquality ? releaseSummaries.airquality.pollutionLabel : '–',
-                    unit: '',
-                    color: releaseSummaries.airquality ? releaseSummaries.airquality.pollutionColor : C.primary,
-                  },
-                  {
-                    label: 'Air releases',
-                    val: `${formatCompactNumber(releaseSummaries.air.totalRelease)} kg`,
-                    unit: 'per year',
-                    color: C.moderate,
-                  },
-                  {
-                    label: 'Water releases',
-                    val: releaseSummaries.water ? `${formatCompactNumber(releaseSummaries.water.totalRelease)} kg` : '–',
-                    unit: 'per year',
-                    color: C.bad,
-                  },
-                ].map((stat) => (
-                  <StatChip key={stat.label} {...stat} />
-                ))}
-              </Group>
-            )}
-
-            {isLoadingSummaries && (
-              <Text fz="sm" c="dimmed">
-                Loading summaries...
-              </Text>
-            )}
-            <BadgeCard
-              airSummary={releaseSummaries.air}
-              waterSummary={releaseSummaries.water}
-              mapImage={mapImage}
-              airQualitySummary={releaseSummaries.airquality}
-            />
-
-
-            <Card withBorder radius="md" p="md" bg="white">
-              <Stack gap="sm" align="center">
-                <Button
-                  component="a"
-                  href={liUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: 8,
-                    background: '#0A66C2',
-                    color: 'white',
-                    borderRadius: 9,
-                    padding: '10px 16px',
-                    fontSize: 13,
-                    fontWeight: 500,
-                    textDecoration: 'none',
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  Share on LinkedIn
-                </Button>
-                <Text fz="xs" c="dimmed" fs="italic" lh={1.5} ta="center">
-                  {liText}
-                </Text>
-              </Stack>
-            </Card>
-
-            <Group justify="space-between">
-              <Button variant="default" onClick={() => goToStep(0)}>
-                ← Back
-              </Button>
-              <Button onClick={() => goToStep(2)} style={{ background: C.primary }}>
-                Get full report →
-              </Button>
-            </Group>
-          </Stack>
-        </SectionFrame>
-        )}
-
-        {active === 2 && (
-        <SectionFrame active={active === 2}>
-          <Stack gap="md">
-            <StepNav active={active} goToStep={goToStep} />
-            <EmailGate email={email} setEmail={setEmail} emailSubmitted={emailSubmitted} handleEmail={handleEmail} />
-
-            {emailSubmitted && (
-              <DetailedReport
-                airSummary={releaseSummaries.air}
-                waterSummary={releaseSummaries.water}
-                airQualitySummary={releaseSummaries.airquality}
-                coordinates={coordinates}
-                radiusKm={radiusKm}
-                facilities={mapFacilities}
-              />
-            )}
-
-            <Group justify="space-between">
-              <Button variant="default" onClick={() => goToStep(1)}>
-                ← Back
-              </Button>
-              <Button variant="light" onClick={() => goToStep(0)}>
-                Start over
-              </Button>
-            </Group>
-          </Stack>
-        </SectionFrame>
-        )}
-
-        <Box ta="center" mt="xl" pb="md">
-          <Group justify="center" align="center" gap={6}>
-            <Text fz="xs" c="dimmed">
-              Built for the
-            </Text>
-            <Anchor href="https://www.iconsof.se" target="_blank" rel="noreferrer">
-              <img src="/iconsOf.png" alt="Icons Of" style={{ height: 16, verticalAlign: 'middle' }} />
-            </Anchor>
-            <Text fz="xs" c="dimmed">
-              hackathon
-            </Text>
-          </Group>
-          <Anchor
-            href="https://www.linkedin.com/company/iconsof"
-            target="_blank"
-            rel="noreferrer"
-            style={{ fontSize: 12, color: C.primary, textDecoration: 'none' }}
-          >
-            Icons Of on LinkedIn ↗
-          </Anchor>
-        </Box>
-      </Stack>
+                <Stepper.Completed>
+                    <Text>All steps completed.</Text>
+                </Stepper.Completed>
+            </Stepper>
 
       {coordinates && (
         <Box
