@@ -1,18 +1,21 @@
-import { Badge, Card, Group, Image, Stack, Text } from '@mantine/core'
+import { Badge, Card, Group, Image, Stack, Text } from "@mantine/core";
 
 function formatCompactNumber(value) {
-  return new Intl.NumberFormat('en', {
-    notation: 'compact',
+  return new Intl.NumberFormat("en", {
+    notation: "compact",
     maximumFractionDigits: 1,
-  }).format(value)
+  }).format(value);
 }
 
 function ReleasePill({ active, label, color }) {
   return (
-    <Badge variant={active ? 'filled' : 'light'} color={active ? color : 'gray'}>
+    <Badge
+      variant={active ? "filled" : "light"}
+      color={active ? color : "gray"}
+    >
       {label}
     </Badge>
-  )
+  );
 }
 
 function ReleaseSection({ title, summary }) {
@@ -24,7 +27,7 @@ function ReleaseSection({ title, summary }) {
           Summary is loading.
         </Text>
       </Card>
-    )
+    );
   }
 
   return (
@@ -35,7 +38,7 @@ function ReleaseSection({ title, summary }) {
             {title}
           </Text>
           <Text size="sm" c="dimmed">
-            Latest year: {summary.latestYear ?? 'N/A'}
+            Latest year: {summary.latestYear ?? "N/A"}
           </Text>
         </Stack>
         <Badge color={summary.intensityColor} variant="filled">
@@ -44,9 +47,21 @@ function ReleaseSection({ title, summary }) {
       </Group>
 
       <Group gap="xs" mt="sm">
-        <ReleasePill active={summary.intensityLabel === 'Low'} label="Low" color="green" />
-        <ReleasePill active={summary.intensityLabel === 'Average'} label="Average" color="yellow" />
-        <ReleasePill active={summary.intensityLabel === 'High'} label="High" color="red" />
+        <ReleasePill
+          active={summary.intensityLabel === "Low"}
+          label="Low"
+          color="green"
+        />
+        <ReleasePill
+          active={summary.intensityLabel === "Average"}
+          label="Average"
+          color="yellow"
+        />
+        <ReleasePill
+          active={summary.intensityLabel === "High"}
+          label="High"
+          color="red"
+        />
       </Group>
 
       <Stack gap={4} mt="md">
@@ -57,7 +72,8 @@ function ReleaseSection({ title, summary }) {
           Larger facilities nearby: {summary.largeFacilityCount}
         </Text>
         <Text size="sm" fw={600}>
-          Total releases in the latest year: {formatCompactNumber(summary.totalRelease)}
+          Total releases in the latest year:{" "}
+          {formatCompactNumber(summary.totalRelease)}
         </Text>
       </Stack>
 
@@ -69,7 +85,9 @@ function ReleaseSection({ title, summary }) {
             </Text>
             {summary.facilityExamples.slice(0, 2).map((facility, index) => (
               <Text key={`${facility.facilityName}-${index}`} size="sm">
-                {facility.facilityName} {facility.city ? `(${facility.city})` : ''} — {formatCompactNumber(facility.totalRelease)}
+                {facility.facilityName}{" "}
+                {facility.city ? `(${facility.city})` : ""} —{" "}
+                {formatCompactNumber(facility.totalRelease)}
               </Text>
             ))}
           </Stack>
@@ -91,7 +109,7 @@ function ReleaseSection({ title, summary }) {
         </Text>
       )}
     </Card>
-  )
+  );
 }
 
 export function BadgeCard({ airSummary, waterSummary, mapImage }) {
@@ -103,7 +121,8 @@ export function BadgeCard({ airSummary, waterSummary, mapImage }) {
             What is nearby?
           </Text>
           <Text c="dimmed" size="sm">
-            A simple overview of air and water releases in the area around your address.
+            A simple overview of air and water releases in the area around your
+            address.
           </Text>
         </Stack>
 
@@ -119,11 +138,11 @@ export function BadgeCard({ airSummary, waterSummary, mapImage }) {
               src={mapImage}
               alt="Captured map preview"
               radius="md"
-              style={{ maxHeight: 260, objectFit: 'cover' }}
+              style={{ maxHeight: 260, objectFit: "cover" }}
             />
           </Card>
         )}
       </Stack>
     </Card>
-  )
+  );
 }
