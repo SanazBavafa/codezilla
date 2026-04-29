@@ -1,9 +1,9 @@
-import { useRef, useState } from 'react';
-import { Autocomplete, Loader } from '@mantine/core';
+import { useRef, useState } from "react";
+import { Autocomplete, Loader } from "@mantine/core";
 
 export function SearchInput({ onSelect }) {
   const timeoutRef = useRef(-1);
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState("");
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
 
@@ -20,11 +20,13 @@ export function SearchInput({ onSelect }) {
     setLoading(true);
     timeoutRef.current = window.setTimeout(async () => {
       const res = await fetch(
-        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(val)}&format=json&limit=5&countrycodes=se`
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(val)}&format=json&limit=5&countrycodes=se`,
       );
       const results = await res.json();
       setLoading(false);
-      setData(results.map((r) => ({ value: r.display_name, lat: r.lat, lon: r.lon })));
+      setData(
+        results.map((r) => ({ value: r.display_name, lat: r.lat, lon: r.lon })),
+      );
     }, 500);
   };
 
@@ -35,7 +37,12 @@ export function SearchInput({ onSelect }) {
       onChange={handleChange}
       onOptionSubmit={(val) => {
         const found = data.find((r) => r.value === val);
-        if (found) onSelect({ name: val, lat: parseFloat(found.lat), lon: parseFloat(found.lon) });
+        if (found)
+          onSelect({
+            name: val,
+            lat: parseFloat(found.lat),
+            lon: parseFloat(found.lon),
+          });
       }}
       rightSection={loading ? <Loader size={16} /> : null}
       label="Sök plats"

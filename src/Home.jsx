@@ -1,17 +1,27 @@
-import { AppShell, Burger, Container, Group, NavLink, NumberInput, Stack, Text, Title } from '@mantine/core'
-import { useState } from 'react'
-import { useDisclosure } from '@mantine/hooks'
-import { Link as RouterLink } from 'react-router-dom'
-import EnterAddress from './Components/EnterAddress.jsx'
-import { SearchInput } from './components/SearchInput'
-import LeafletMap from './Components/LeafletMap.jsx'
-import { BadgeCard } from './Components/BadgeCard.jsx'
+import {
+  AppShell,
+  Burger,
+  Container,
+  Group,
+  NavLink,
+  NumberInput,
+  Stack,
+  Text,
+  Title,
+} from "@mantine/core";
+import { useState } from "react";
+import { useDisclosure } from "@mantine/hooks";
+import { Link as RouterLink } from "react-router-dom";
+import EnterAddress from "./Components/EnterAddress.jsx";
+import { SearchInput } from "./components/SearchInput";
+import LeafletMap from "./Components/LeafletMap.jsx";
+import { BadgeCard } from "./Components/BadgeCard.jsx";
 
 export default function Home() {
-  const [opened, { toggle }] = useDisclosure()
-  const [coordinates, setCoordinates] = useState(null)
-  const [rangeKm, setRangeKm] = useState(5)
-  const [mapImage, setMapImage] = useState(null)
+  const [opened, { toggle }] = useDisclosure();
+  const [coordinates, setCoordinates] = useState(null);
+  const [rangeKm, setRangeKm] = useState(5);
+  const [mapImage, setMapImage] = useState(null);
 
   return (
     <AppShell
@@ -34,22 +44,9 @@ export default function Home() {
 
       <AppShell.Navbar>
         <Stack p="md" gap="sm">
-          <NavLink
-            label="Home"
-            to="/"
-            component={RouterLink}
-            active
-          />
-          <NavLink
-            label="About"
-            to="/about"
-            component={RouterLink}
-          />
-          <NavLink
-            label="Display"
-            to="/display"
-            component={RouterLink}
-          />
+          <NavLink label="Home" to="/" component={RouterLink} active />
+          <NavLink label="About" to="/about" component={RouterLink} />
+          <NavLink label="Display" to="/display" component={RouterLink} />
         </Stack>
       </AppShell.Navbar>
 
@@ -76,7 +73,11 @@ export default function Home() {
             step={1}
             mt="md"
           />
-          <LeafletMap coordinates={coordinates} rangeKm={rangeKm} onImageCaptured={setMapImage} />
+          <LeafletMap
+            coordinates={coordinates}
+            rangeKm={rangeKm}
+            onImageCaptured={setMapImage}
+          />
           {mapImage && (
             <Text size="sm" c="gray" mt="sm">
               Map image is ready and stored in memory for later use.
@@ -89,7 +90,6 @@ export default function Home() {
               and styling.
             </Text>
           </Stack>
-          
         </Container>
       </AppShell.Main>
     </AppShell>

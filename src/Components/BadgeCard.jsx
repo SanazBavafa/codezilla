@@ -1,10 +1,10 @@
 import { Badge, Card, Group, Image, Progress, Stack, Text, Flex } from '@mantine/core'
 
 function formatCompactNumber(value) {
-  return new Intl.NumberFormat('en', {
-    notation: 'compact',
+  return new Intl.NumberFormat("en", {
+    notation: "compact",
     maximumFractionDigits: 1,
-  }).format(value)
+  }).format(value);
 }
 
 
@@ -17,7 +17,7 @@ function ReleaseSection({ title, summary, score }) {
           Summary is loading.
         </Text>
       </Card>
-    )
+    );
   }
 
   return (
@@ -51,11 +51,12 @@ function ReleaseSection({ title, summary, score }) {
           Larger facilities nearby: {summary.largeFacilityCount}
         </Text>
         <Text size="sm" fw={600}>
-          Total releases in the latest year: {formatCompactNumber(summary.totalRelease)}
+          Total releases in the latest year:{" "}
+          {formatCompactNumber(summary.totalRelease)}
         </Text>
       </Stack>
     </Card>
-  )
+  );
 }
 
 export function BadgeCard({ airSummary, waterSummary, airScore, waterScore, mapImage }) {
@@ -84,11 +85,11 @@ export function BadgeCard({ airSummary, waterSummary, airScore, waterScore, mapI
               src={mapImage}
               alt="Captured map preview"
               radius="md"
-              style={{ maxHeight: 260, objectFit: 'cover' }}
+              style={{ maxHeight: 260, objectFit: "cover" }}
             />
           </Card>
         )}
       </Stack>
     </Card>
-  )
+  );
 }

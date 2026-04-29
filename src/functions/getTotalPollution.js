@@ -1,13 +1,13 @@
-import { expandCoordinates } from './expandCoordinates'
-import { getDistanceKm } from './getDistanceKm'
+import { expandCoordinates } from "./expandCoordinates";
+import { getDistanceKm } from "./getDistanceKm";
 
 export function getTotalPollution(lat, lon, data, radiusKm = 20) {
 
   const { north, south, east, west } = expandCoordinates(lat, lon, radiusKm)
 
   const inside = data.filter((facility) => {
-    const latitude = Number(facility.Latitude)
-    const longitude = Number(facility.Longitude)
+    const latitude = Number(facility.Latitude);
+    const longitude = Number(facility.Longitude);
 
     return (
       Number.isFinite(latitude) &&
@@ -17,13 +17,13 @@ export function getTotalPollution(lat, lon, data, radiusKm = 20) {
       longitude >= west &&
       longitude <= east &&
       getDistanceKm(lat, lon, latitude, longitude) <= radiusKm
-    )
-  })
+    );
+  });
 
   const total = inside.reduce((sum, facility) => {
-    const releaseValue = Number(facility.Releases)
-    return sum + (Number.isFinite(releaseValue) ? releaseValue : 0)
+    const releaseValue = Number(facility.Releases);
+    return sum + (Number.isFinite(releaseValue) ? releaseValue : 0);
   }, 0);
 
-  return total
+  return total;
 }
