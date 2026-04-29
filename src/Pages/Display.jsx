@@ -191,15 +191,20 @@ export default function Display() {
       )}
 
       {/* ── Footer ── */}
-      <Group justify="space-between" mt="xl" pb="md">
-        <Text fz="xs" c="dimmed">
-          Built for the{' '}
-          <a href="https://www.iconsof.se" target="_blank" rel="noreferrer" style={{ color: C.primary, textDecoration: 'none' }}>Icons Of</a>
-          {' '}hackathon
-        </Text>
-        <a href="https://www.linkedin.com/company/iconsof" target="_blank" rel="noreferrer"
-          style={{ fontSize: 12, color: C.primary, textDecoration: 'none' }}>Icons Of on LinkedIn ↗</a>
-      </Group>
+    <Box ta="center" mt="xl" pb="md">
+  <Group justify="center" align="center" gap={6}>
+    <Text fz="xs" c="dimmed">Built for the</Text>
+    <a href="https://www.iconsof.se" target="_blank" rel="noreferrer">
+      <img src="/iconsOf.png" alt="Icons Of" style={{ height: 16, verticalAlign: 'middle' }} />
+    </a>
+    <Text fz="xs" c="dimmed">hackathon</Text>
+  </Group>
+</Box>
+  <a href="https://www.linkedin.com/company/iconsof" target="_blank" rel="noreferrer"
+    style={{ fontSize: 12, color: C.primary, textDecoration: 'none' }}>
+    Icons Of on LinkedIn ↗
+  </a>
+
 
       {/* Hidden map renderer */}
       {coordinates && (
