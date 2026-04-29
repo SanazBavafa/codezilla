@@ -1,8 +1,9 @@
 import { expandCoordinates } from "./expandCoordinates";
 import { getDistanceKm } from "./getDistanceKm";
 
-export function getTotalPollution(lat, lon, data, radiusKm = 5) {
-  const { north, south, east, west } = expandCoordinates(lat, lon, radiusKm);
+export function getTotalPollution(lat, lon, data, radiusKm = 20) {
+
+  const { north, south, east, west } = expandCoordinates(lat, lon, radiusKm)
 
   const inside = data.filter((facility) => {
     const latitude = Number(facility.Latitude);

@@ -1,4 +1,4 @@
-import { Badge, Card, Group, Image, Stack, Text } from "@mantine/core";
+import { Badge, Card, Group, Image, Progress, Stack, Text, Flex } from '@mantine/core'
 
 function formatCompactNumber(value) {
   return new Intl.NumberFormat("en", {
@@ -7,18 +7,8 @@ function formatCompactNumber(value) {
   }).format(value);
 }
 
-function ReleasePill({ active, label, color }) {
-  return (
-    <Badge
-      variant={active ? "filled" : "light"}
-      color={active ? color : "gray"}
-    >
-      {label}
-    </Badge>
-  );
-}
 
-function ReleaseSection({ title, summary }) {
+function ReleaseSection({ title, summary, score }) {
   if (!summary) {
     return (
       <Card withBorder radius="md" padding="md">
@@ -37,32 +27,21 @@ function ReleaseSection({ title, summary }) {
           <Text fw={700} size="lg">
             {title}
           </Text>
-          <Text size="sm" c="dimmed">
-            Latest year: {summary.latestYear ?? "N/A"}
-          </Text>
         </Stack>
         <Badge color={summary.intensityColor} variant="filled">
           {summary.intensityLabel}
         </Badge>
       </Group>
 
-      <Group gap="xs" mt="sm">
-        <ReleasePill
-          active={summary.intensityLabel === "Low"}
-          label="Low"
-          color="green"
-        />
-        <ReleasePill
-          active={summary.intensityLabel === "Average"}
-          label="Average"
-          color="yellow"
-        />
-        <ReleasePill
-          active={summary.intensityLabel === "High"}
-          label="High"
-          color="red"
-        />
-      </Group>
+      {score && (
+        <Stack gap={2} mt="sm">
+          <Text fw={600} size="sm">
+            Score: {score.score} / 100
+          </Text>
+          <Progress value={score.barValue} color={score.score > 66 ? 'red' : score.score > 33 ? 'yellow' : 'green'} size="lg" radius="xl" />
+          <Text size="xs" c="dimmed">{score.label}</Text>
+        </Stack>
+      )}
 
       <Stack gap={4} mt="md">
         <Text size="sm">
@@ -76,43 +55,11 @@ function ReleaseSection({ title, summary }) {
           {formatCompactNumber(summary.totalRelease)}
         </Text>
       </Stack>
-
-      {summary.totalFacilities > 0 ? (
-        <>
-          <Stack gap={4} mt="md">
-            <Text fw={600} size="sm">
-              A few examples
-            </Text>
-            {summary.facilityExamples.slice(0, 2).map((facility, index) => (
-              <Text key={`${facility.facilityName}-${index}`} size="sm">
-                {facility.facilityName}{" "}
-                {facility.city ? `(${facility.city})` : ""} —{" "}
-                {formatCompactNumber(facility.totalRelease)}
-              </Text>
-            ))}
-          </Stack>
-
-          <Stack gap={4} mt="md">
-            <Text fw={600} size="sm">
-              Main pollutants
-            </Text>
-            {summary.pollutantTotals.slice(0, 2).map(([pollutant, total]) => (
-              <Text key={pollutant} size="sm">
-                {pollutant}: {formatCompactNumber(total)}
-              </Text>
-            ))}
-          </Stack>
-        </>
-      ) : (
-        <Text size="sm" c="dimmed" mt="md">
-          No matching facilities were found in this area.
-        </Text>
-      )}
     </Card>
   );
 }
 
-export function BadgeCard({ airSummary, waterSummary, mapImage }) {
+export function BadgeCard({ airSummary, waterSummary, airScore, waterScore, mapImage }) {
   return (
     <Card withBorder radius="md" padding="lg">
       <Stack gap="md">
@@ -121,13 +68,13 @@ export function BadgeCard({ airSummary, waterSummary, mapImage }) {
             What is nearby?
           </Text>
           <Text c="dimmed" size="sm">
-            A simple overview of air and water releases in the area around your
-            address.
+            A simple overview of how much air and water pollution is released by companies in the area around your address.
           </Text>
         </Stack>
-
-        <ReleaseSection title="Air releases" summary={airSummary} />
-        <ReleaseSection title="Water releases" summary={waterSummary} />
+      <Flex direction="row" gap="md" wrap="wrap">
+        <ReleaseSection title="Air releases" summary={airSummary} score={airScore} />
+        <ReleaseSection title="Water releases" summary={waterSummary} score={waterScore} />
+      </Flex>
 
         {mapImage && (
           <Card withBorder radius="md" padding="md">
