@@ -1,4 +1,4 @@
-import { Badge, Card, Group, Image, Stack, Text } from '@mantine/core'
+import { Badge, Card, Group, Image, Stack, Text, Flex } from '@mantine/core'
 
 function formatCompactNumber(value) {
   return new Intl.NumberFormat('en', {
@@ -107,9 +107,6 @@ export function BadgeCard({ airSummary, waterSummary, mapImage }) {
           </Text>
         </Stack>
 
-        <ReleaseSection title="Air releases" summary={airSummary} />
-        <ReleaseSection title="Water releases" summary={waterSummary} />
-
         {mapImage && (
           <Card withBorder radius="md" padding="md">
             <Text fw={600} size="sm" mb="xs">
@@ -123,6 +120,10 @@ export function BadgeCard({ airSummary, waterSummary, mapImage }) {
             />
           </Card>
         )}
+        <Flex direction="row" gap="md">
+        <ReleaseSection title="Air releases" summary={airSummary} />
+        <ReleaseSection title="Water releases" summary={waterSummary} />
+        </Flex>
       </Stack>
     </Card>
   )

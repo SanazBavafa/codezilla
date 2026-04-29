@@ -1,0 +1,1 @@
+const DEFAULT_RANGE_KM = 20;

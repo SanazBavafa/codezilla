@@ -13,6 +13,7 @@ import { BadgeCard } from '../Components/BadgeCard.jsx'
 import { DetailedReport } from '../Components/DetailedReport.jsx'
 import EnterAddress from '../Components/EnterAddress.jsx'
 import { useDisplayStepper } from '../hooks/useDisplayStepper.js'
+import { DEFAULT_RANGE_KM } from '../Constants/DefaultValues.js'
 
 export default function Display() {
     const {
@@ -38,7 +39,7 @@ export default function Display() {
                         <EnterAddress onCoordinatesFound={handleCoordinatesFound} />
                         <NumberInput
                             label="Radius (km)"
-                            value={radiusKm}
+                            value={DEFAULT_RANGE_KM}
                             onChange={setRadiusKm}
                             min={1}
                             max={100}
