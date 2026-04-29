@@ -20,41 +20,10 @@ function SiteShell({ children }) {
 
   return (
     <AppShell
-      header={{ height: 64 }}
-      navbar={{
-        width: 280,
-        breakpoint: 'sm',
-        collapsed: { mobile: !opened },
-      }}
+      
       padding="md"
     >
-      <AppShell.Header>
-        <Group h="100%" px="md" justify="space-between">
-          <Group gap="sm">
-            <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-            <Title order={1} size="h3">
-              Codezilla
-            </Title>
-          </Group>
-        </Group>
-      </AppShell.Header>
-
-      <AppShell.Navbar p="md">
-        <Stack gap="xs">
-          <NavLink
-            label="Home"
-            component={RouterLink}
-            to="/"
-            active={location.pathname === '/'}
-          />
-          <NavLink
-            label="About"
-            component={RouterLink}
-            to="/about"
-            active={location.pathname === '/about'}
-          />
-        </Stack>
-      </AppShell.Navbar>
+      
 
       <AppShell.Main>{children}</AppShell.Main>
     </AppShell>
@@ -72,16 +41,34 @@ function NotFound() {
 
 export default function AppRoutes() {
   return (
-    <MantineProvider>
-      <HashRouter>
-        <SiteShell>
-          <Routes>
-            <Route path="/" element={<Display />} />
-            <Route path="/about" element={<About />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </SiteShell>
-      </HashRouter>
-    </MantineProvider>
+    <MantineProvider theme={{
+  primaryColor: 'moss',
+  fontFamily: 'Inter, system-ui, sans-serif',
+  headings: {
+    fontFamily: 'Fraunces, Georgia, serif',
+    fontWeight: '700',
+  },
+  colors: {
+    moss: ['#f0f5f1','#d6e8d9','#aed1b4','#7db88a','#4e9e62','#2d7a44','#1e5c30','hsl(140,35%,25%)','#0f3318','#071a0c'],
+  },
+  defaultRadius: 'md',
+  components: {
+    AppShell: {
+      styles: {
+        main: { background: 'hsl(40, 33%, 96%)' },
+      },
+    },
+  },
+}}>
+  <HashRouter>
+    <SiteShell>
+      <Routes>
+        <Route path="/" element={<Display />} />
+        <Route path="/about" element={<About />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </SiteShell>
+  </HashRouter>
+</MantineProvider>
   )
 }
