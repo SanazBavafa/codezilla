@@ -2,6 +2,11 @@
   "name": "codezilla",
   "private": true,
   "version": "0.0.0",
+  "description": "GreenHouse — quick emissions & pollution summary by IconsOf",
+  "author": "IconsOf",
+  "homepage": "https://iconsof.se",
+  "keywords": ["emissions", "pollution", "esg", "IconsOf", "GreenHouse"],
+  "license": "UNLICENSED",
   "type": "module",
   "scripts": {
     "dev": "vite",

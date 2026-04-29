@@ -1,6 +1,6 @@
-import { AppShell, Burger, Group, MantineProvider, NavLink, Stack, Title } from '@mantine/core'
-import { useDisclosure } from '@mantine/hooks'
-import { HashRouter, Link as RouterLink, Route, Routes, useLocation } from 'react-router-dom'
+import { AppShell, MantineProvider} from '@mantine/core'
+
+import { HashRouter, Routes, Route } from 'react-router-dom'
 import Display from './Pages/Display'
 
 import '@mantine/core/styles.css'
@@ -15,46 +15,15 @@ function About() {
 }
 
 function SiteShell({ children }) {
-  const location = useLocation()
-  const [opened, { toggle }] = useDisclosure()
 
   return (
     <AppShell
       header={{ height: 64 }}
       navbar={{
-        width: 280,
-        breakpoint: 'sm',
-        collapsed: { mobile: !opened },
+        width: 0
       }}
       padding="md"
     >
-      <AppShell.Header>
-        <Group h="100%" px="md" justify="space-between">
-          <Group gap="sm">
-            <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-            <Title order={1} size="h3">
-              Codezilla
-            </Title>
-          </Group>
-        </Group>
-      </AppShell.Header>
-
-      <AppShell.Navbar p="md">
-        <Stack gap="xs">
-          <NavLink
-            label="Home"
-            component={RouterLink}
-            to="/"
-            active={location.pathname === '/'}
-          />
-          <NavLink
-            label="About"
-            component={RouterLink}
-            to="/about"
-            active={location.pathname === '/about'}
-          />
-        </Stack>
-      </AppShell.Navbar>
 
       <AppShell.Main>{children}</AppShell.Main>
     </AppShell>
@@ -72,7 +41,24 @@ function NotFound() {
 
 export default function AppRoutes() {
   return (
-    <MantineProvider>
+    <MantineProvider  theme={{
+  primaryColor: 'moss',
+  fontFamily: 'Inter, system-ui, sans-serif',
+  headings: {
+    fontFamily: 'Fraunces, Georgia, serif',
+    fontWeight: '700',
+  },
+  colors: {
+    moss: ['#f0f5f1','#d6e8d9','#aed1b4','#7db88a','#4e9e62','#2d7a44','#1e5c30','hsl(140,35%,25%)','#0f3318','#071a0c'],
+  },
+  defaultRadius: 'md',
+  components: {
+    AppShell: {
+      styles: {
+        main: { background: 'hsl(40, 33%, 96%)' },
+      },
+    },
+  },}}>
       <HashRouter>
         <SiteShell>
           <Routes>

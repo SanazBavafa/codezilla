@@ -2,14 +2,16 @@ import { useCallback, useEffect, useState } from 'react'
 import { filterPollutionDataByCoordinates } from '../functions/filterPollutionDataByCoordinates'
 import { loadPollutionCsv } from '../functions/loadPollutionCsv'
 import { getLatestYearRows, summarizeReleaseRows } from '../functions/summarizeReleaseRows'
+import { fetchAirQualityFromCoordinates } from '../Fetch/fetchAirQualityFromCoordinates'
 
 export function useDisplayStepper() {
   const [active, setActive] = useState(0)
   const [coordinates, setCoordinates] = useState(null)
   const [mapImage, setMapImage] = useState(null)
-  const [releaseSummaries, setReleaseSummaries] = useState({ air: null, water: null })
+  const [mapFacilities, setMapFacilities] = useState([])
+  const [releaseSummaries, setReleaseSummaries] = useState({ air: null, water: null, airquality: null })
   const [isLoadingSummaries, setIsLoadingSummaries] = useState(false)
-  const [radiusKm, setRadiusKm] = useState(5)
+  const [radiusKm, setRadiusKm] = useState(20)
 
   const handleCoordinatesFound = useCallback((coords) => {
     setCoordinates(coords)
@@ -26,8 +28,6 @@ export function useDisplayStepper() {
 
   useEffect(() => {
     if (!coordinates) {
-      setReleaseSummaries({ air: null, water: null })
-      setIsLoadingSummaries(false)
       return undefined
     }
 
@@ -60,15 +60,34 @@ export function useDisplayStepper() {
         )
 
         if (!isCancelled) {
+          const airFacilities = filteredAirRows.map((row) => ({
+            source: 'air',
+            facilityName: row.facilityName ?? 'Air facility',
+            city: row.city ?? '',
+            latitude: Number(row.Latitude),
+            longitude: Number(row.Longitude),
+          }))
+
+          const waterFacilities = filteredWaterRows.map((row) => ({
+            source: 'water',
+            facilityName: row.facilityName ?? 'Water facility',
+            city: row.city ?? '',
+            latitude: Number(row.Latitude),
+            longitude: Number(row.Longitude),
+          }))
+
           setReleaseSummaries({
             air: summarizeReleaseRows(filteredAirRows, { releaseType: 'AIR', latestYear: airLatestYear }),
             water: summarizeReleaseRows(filteredWaterRows, { releaseType: 'WATER', latestYear: waterLatestYear }),
+            airquality: await fetchAirQualityFromCoordinates(Number(coordinates.lat), Number(coordinates.lon)),
           })
+          setMapFacilities([...airFacilities, ...waterFacilities])
         }
       } catch (error) {
         if (!isCancelled) {
           console.error('Error calculating release summaries:', error)
           setReleaseSummaries({ air: null, water: null })
+          setMapFacilities([])
         }
       } finally {
         if (!isCancelled) {
@@ -89,6 +108,7 @@ export function useDisplayStepper() {
     coordinates,
     mapImage,
     releaseSummaries,
+    mapFacilities,
     isLoadingSummaries,
     radiusKm,
     handleCoordinatesFound,

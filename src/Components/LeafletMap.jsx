@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { MapContainer, Marker, Popup, Circle, TileLayer } from 'react-leaflet'
+import { Circle, CircleMarker, MapContainer, Popup, TileLayer } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import marker2x from 'leaflet/dist/images/marker-icon-2x.png'
@@ -13,7 +13,15 @@ L.Icon.Default.mergeOptions({
   shadowUrl: shadow,
 })
 
-export default function LeafletMap({ coordinates, rangeKm = 5, onImageCaptured }) {
+function getFacilityColor(source) {
+  if (source === 'water') {
+    return '#1098ad'
+  }
+
+  return '#e8590c'
+}
+
+export default function LeafletMap({ coordinates, rangeKm = 5, facilities = [], onImageCaptured }) {
   const mapCaptureRef = useRef(null)
 
   useEffect(() => {
@@ -44,7 +52,7 @@ export default function LeafletMap({ coordinates, rangeKm = 5, onImageCaptured }
     return () => {
       isCancelled = true
     }
-  }, [coordinates, rangeKm, onImageCaptured])
+  }, [coordinates, rangeKm, facilities, onImageCaptured])
 
   if (!coordinates) {
     return null
@@ -62,18 +70,50 @@ export default function LeafletMap({ coordinates, rangeKm = 5, onImageCaptured }
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             crossOrigin="anonymous"
           />
-          <Marker position={position}>
+          <CircleMarker
+            center={position}
+            radius={9}
+            pathOptions={{
+              color: '#1c7ed6',
+              fillColor: '#4dabf7',
+              fillOpacity: 1,
+              weight: 3,
+            }}
+          >
             <Popup>
               <strong>Selected location</strong>
               <br />
               {coordinates.lat}, {coordinates.lon}
             </Popup>
-          </Marker>
+          </CircleMarker>
           <Circle
             center={position}
             radius={radiusInMeters}
             pathOptions={{ color: '#228be6', fillColor: '#74c0fc', fillOpacity: 0.2 }}
           />
+          {facilities
+            .filter((facility) => Number.isFinite(facility.latitude) && Number.isFinite(facility.longitude))
+            .map((facility, index) => (
+              <CircleMarker
+                key={`${facility.source}-${facility.facilityName}-${index}`}
+                center={[facility.latitude, facility.longitude]}
+                radius={5}
+                pathOptions={{
+                  color: getFacilityColor(facility.source),
+                  fillColor: getFacilityColor(facility.source),
+                  fillOpacity: 0.95,
+                  weight: 2,
+                }}
+              >
+                <Popup>
+                  <strong>{facility.facilityName}</strong>
+                  <br />
+                  {facility.city || 'Unknown city'}
+                  <br />
+                  {facility.latitude}, {facility.longitude}
+                </Popup>
+              </CircleMarker>
+            ))}
         </MapContainer>
       </div>
     </div>
